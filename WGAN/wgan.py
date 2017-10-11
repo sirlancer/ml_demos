@@ -31,8 +31,8 @@ class WassersteinGAN(object):
         self.d = self.d_net(self.x, reuse=False)
         self.d_ = self.d_net(self.x_)
 
-        self.g_loss = tf.reduce_mean(self.d_)
-        self.d_loss = tf.reduce_mean(self.d) - tf.reduce_mean(self.d_)
+        self.g_loss = -tf.reduce_mean(self.d_)
+        self.d_loss = -tf.reduce_mean(self.d) + tf.reduce_mean(self.d_)
 
         self.d_adam, self.g_adam = None, None
 
