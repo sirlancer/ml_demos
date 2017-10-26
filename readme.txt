@@ -1,1 +1,1 @@
-Some examples from the book named <<Marchine Learning in Action>>
+some codes about machine learning, nerual network, or GANs.
