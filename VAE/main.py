@@ -81,13 +81,13 @@ class VAE(object):
                 for idx in range(int(self.n_examples / self.batch_size)):
                     batch = self.mnist.train.next_batch(self.batch_size)[0]
                     _, gen_loss, lat_loss = sess.run([self.optimizer, self.generation_loss, self.latent_loss], feed_dict={self.images:batch})
-                    if idx % 500 == 0:
+                    if idx % (self.n_examples-3) == 0:
                         print("epoch %d, gen_loss:%f, lat_loss:%f" %(epoch, np.mean(gen_loss), np.mean(lat_loss)))
 
                         saver.save(sess, checkpoint_dir, global_step=epoch)
                         generated_test = sess.run(self.generated_images, feed_dict={self.images:visulization})
                         generated_test = generated_test.reshape(self.batch_size,28,28)
-                        imsave(result_dir+'/'+str(epoch)+'-'+str(idx)+'.jpg', merge(generated_test[:64],[8,8]))
+                        imsave(result_dir+'/'+str(epoch)+'.jpg', merge(generated_test[:64],[8,8]))
 
 
 
