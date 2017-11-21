@@ -29,7 +29,7 @@ class VAE(object):
 
         generated_flat = tf.reshape(self.generated_images, [self.batch_size, 28*28])
 
-        self.generation_loss = -tf.reduce_sum(self.images*tf.log(10e-8+generated_flat)+(1-self.images)*tf.log(10e-8 + 1 - self.images),1)
+        self.generation_loss = -tf.reduce_sum(self.images*tf.log(10e-8+generated_flat)+(1-self.images)*tf.log(10e-8 + 1 - generated_flat),1)
         self.latent_loss = 0.5 * tf.reduce_sum(tf.square(z_mean)+tf.square(z_stddev) - 1 + tf.log(tf.square(z_stddev)),1)
 
         self.cost = tf.reduce_mean(self.generation_loss+self.latent_loss)
@@ -84,7 +84,7 @@ class VAE(object):
                     if idx % (self.n_examples-3) == 0:
                         print("epoch %d, gen_loss:%f, lat_loss:%f" %(epoch, np.mean(gen_loss), np.mean(lat_loss)))
 
-                        saver.save(sess, checkpoint_dir, global_step=epoch)
+                        saver.save(sess, checkpoint_dir+'/', global_step=epoch)
                         generated_test = sess.run(self.generated_images, feed_dict={self.images:visulization})
                         generated_test = generated_test.reshape(self.batch_size,28,28)
                         imsave(result_dir+'/'+str(epoch)+'.jpg', merge(generated_test[:64],[8,8]))
