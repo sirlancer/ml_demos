@@ -5,7 +5,7 @@ import tensorflow as tf
 import numpy as np
 
 # convolution layer
-def con2d(x, inputFeatures, outputFeatures, name):
+def conv2d(x, inputFeatures, outputFeatures, name):
     with tf.variable_scope(name):
         # w, h, in_channel, out_channel
         w = tf.get_variable("w", [5, 5, inputFeatures, outputFeatures], initializer=tf.truncated_normal_initializer(stddev=0.02))

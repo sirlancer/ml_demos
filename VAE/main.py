@@ -63,12 +63,12 @@ class VAE(object):
 
     def train(self):
         visulization = self.mnist.train.next_batch(self.batch_size)[0]
-        reshaped_vis = tf.reshape(visulization, [self.batch_size,28, 28])
+        reshaped_vis = visulization.reshape(self.batch_size, 28, 28)
         result_dir = "./results"
         if not os.path.exists(result_dir):
             os.mkdir(result_dir)
 
-        imsave("./result/base.jpg", merge(reshaped_vis[:64], [8,8]))
+        imsave(result_dir+"/"+"base.jpg", merge(reshaped_vis[:64], [8,8]))
 
         checkpoint_dir = "./model"
         if not os.path.exists(checkpoint_dir):
@@ -82,10 +82,10 @@ class VAE(object):
                     batch = self.mnist.train.next_batch(self.batch_size)[0]
                     _, gen_loss, lat_loss = sess.run([self.optimizer, self.generation_loss, self.latent_loss], feed_dict={self.images:batch})
                     if idx % 500 == 0:
-                        print("epoch %d, gen_loss:%f, lat_loss:%f" %(epoch, gen_loss, lat_loss))
+                        print("epoch %d, gen_loss:%f, lat_loss:%f" %(epoch, np.mean(gen_loss), np.mean(lat_loss)))
 
                         saver.save(sess, checkpoint_dir, global_step=epoch)
-                        generated_test = sess.run(self.generated_images, feed_dict={self.image:visulization})
+                        generated_test = sess.run(self.generated_images, feed_dict={self.images:visulization})
                         generated_test = generated_test.reshape(self.batch_size,28,28)
                         imsave(result_dir+'/'+str(epoch)+'-'+str(idx)+'.jpg', merge(generated_test[:64],[8,8]))
 
