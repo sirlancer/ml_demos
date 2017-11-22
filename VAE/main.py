@@ -74,8 +74,12 @@ class VAE(object):
         if not os.path.exists(checkpoint_dir):
             os.mkdir(checkpoint_dir)
         # train
-        saver = tf.train.Saver(max_to_keep=2)
+        saver = tf.train.Saver(max_to_keep=1)
         with tf.Session() as sess:
+            log_dir = './log'
+            if not os.path.exists(log_dir):
+                os.mkdir(log_dir)
+            writer = tf.summary.FileWriter(log_dir+'/', sess.graph)
             sess.run(tf.initialize_all_variables())
             for epoch in range(10):
                 for idx in range(int(self.n_examples / self.batch_size)):
@@ -88,7 +92,7 @@ class VAE(object):
                         generated_test = sess.run(self.generated_images, feed_dict={self.images:visulization})
                         generated_test = generated_test.reshape(self.batch_size,28,28)
                         imsave(result_dir+'/'+str(epoch)+'.jpg', merge(generated_test[:64],[8,8]))
-
+        writer.close()
 
 
 vae = VAE()
